@@ -1,0 +1,13 @@
+apiVersion: v1beta2
+replicaCount: 1
+
+web:
+  image: demo42/web:v1
+
+api:
+  image: demo42/quotes:v1
+
+imageCredentials:
+  registry: registry
+  username: username
+  password: password

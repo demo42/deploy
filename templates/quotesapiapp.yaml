@@ -1,0 +1,41 @@
+apiVersion: apps/{{ .Values.apiVersion }}
+kind: Deployment
+metadata:
+  name: quotes-api
+  labels:
+    app: {{ template "demo42.name" . }}
+    chart: {{ template "demo42.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}  
+spec: 
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: quotes-api
+  template: 
+    metadata:
+     labels:
+        app: quotes-api
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: quotes-api
+        image: {{ .Values.api.image }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+      imagePullSecrets:
+        - name: app-registry-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: quotes-api-svc
+spec:
+    ports:
+        - port: 80
+          protocol: TCP
+          targetPort: 80
+    selector:
+        app: quotes-api
+    type: ClusterIP
