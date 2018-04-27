@@ -8,14 +8,18 @@ services:
       dockerfile: ./src/WebUI/Dockerfile
     ports:
       - "80:80"
+    environment:
+      - QuotesUri=http://quotes-api/
+    networks:
+      - webnet
   quotes-api:
     # http://localhost:8080/quotes/rand
     image: ${REGISTRY_NAME}demo42/quotes-api:${TAG}
     build:
       context: ../quotes/
       dockerfile: ./src/QuoteService/Dockerfile
-    ports:
-      - "8080:80"
+    # ports:
+    #   - "8080:80"
     networks:
       - webnet
 networks:
