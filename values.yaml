@@ -5,7 +5,7 @@ web:
   image: demo42/web:v1
 
 api:
-  image: demo42/quotes:v1
+  image: demo42/quotes-api:v1
 
 imageCredentials:
   registry: registry
