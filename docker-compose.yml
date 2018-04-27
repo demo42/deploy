@@ -18,8 +18,10 @@ services:
     build:
       context: ../quotes/
       dockerfile: ./src/QuoteService/Dockerfile
-    # ports:
-    #   - "8080:80"
+    environment:
+      - ConnectionString=$DBCONNECTIONSTRING
+    ports:
+      - "8080:80"
     networks:
       - webnet
 networks:

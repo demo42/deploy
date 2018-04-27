@@ -7,6 +7,8 @@ web:
 api:
   image: demo42/quotes-api:v1
 
+quotes-api-db-connectionstring: myconnectionNotStringed
+
 imageCredentials:
   registry: registry
   username: username
