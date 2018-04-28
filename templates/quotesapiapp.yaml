@@ -39,7 +39,8 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-    name: quotes-api-svc
+    # used for in-cluster dns discovery
+    name: quotes-api
 spec:
     ports:
         - port: 80
