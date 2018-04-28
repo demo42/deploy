@@ -19,7 +19,7 @@ services:
       context: ../quotes/
       dockerfile: ./src/QuoteService/Dockerfile
     environment:
-      - ConnectionString=$DBCONNECTIONSTRING
+      #- ConnectionString=$DBCONNECTIONSTRING
       - ConfigPath=/etc/quotes-secrets
     ports:
       - "8080:80"
