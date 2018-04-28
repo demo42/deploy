@@ -2,10 +2,10 @@ apiVersion: v1beta2
 replicaCount: 1
 
 web:
-  image: demo42/web:v1
+  image: demo42/web:vn
 
 api:
-  image: demo42/quotes-api:v1
+  image: demo42/quotes-api:vn
 
 quotes-api-db-connectionstring: myconnectionNotStringed
 
