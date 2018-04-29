@@ -16,6 +16,7 @@ case $REPOSITORY in
     helm upgrade demo42 . --reuse-values --set api.image=$REGISTRY/$REPOSITORY:$TAG
   ;;
   *)
-    echo sumptin else: $REPOSITORY
+    echo helm upgrade demo42 . --reuse-values 
+    helm upgrade demo42 . --reuse-values
   ;;
 esac
