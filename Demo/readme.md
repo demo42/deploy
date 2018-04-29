@@ -5,7 +5,7 @@
     ```sh
     # Replace these values for your configuration
     # I've left our values in, as we use this for our demos, providing some examples
-    export KEYVAULT=stevelaskv
+    export KEYVAULT=jengademoskv
     # the secret name referenced within keyvault
     export GIT_TOKEN_NAME=stevelasker-git-access-token
     # where just the registry name is required
@@ -14,6 +14,7 @@
     # This is where your registry would be
     # Accounts for registries in dogfood or other clouds like .gov, Germany and China
     export REGISTRY_NAME=$ACR_NAME.azurecr.io/
+    export TAG=dev1
     ```
 - Setting the default registry, so each az acr command doesn't need to include `-r`
     ```sh
@@ -23,4 +24,70 @@
     While running the demo, I typically keep a terminal tab open with this command continually running.
     ```sh
     watch -n1 az acr build-task list-builds
+    ```
+- Local builds
+    ```sh
+    docker-compose build \
+    --build-arg REGISTRY_NAME=$REGISTRY_NAME \
+    --build-arg A_CONNECTIONSTRING=$(az keyvault secret show \
+                                        --vault-name $KEYVAULT \
+                                        --name demo42-quotes-sql-connectionstring-eastus \
+                                        --query value -o tsv)
+    docker-compose up
+    ```
+- Get AKS Credentials
+    ```sh
+    # EastUS
+    az aks get-credentials -g acrdemoaks -n acrdemoeus
+    # West Europe
+    az aks get-credentials -g acrdemoaksweu -n acrdemoweu
+    ```
+- Browsing the AKS Cluster - Kube Dashboard
+
+  I typically leave this in it's own tab
+
+    ```sh
+    # EastUS
+    az aks browse -g acrdemoaks -n acrdemoeus
+    # West Europe
+    az aks browse -g acrdemoaksweu -n acrdemoweu
+    ```
+
+# Demo: Unique Tagging 
+1. Start with a stable deployment
+1. Bump replicas of the website to 4
+    - open `deploy/templates/webapp.yaml`
+        ```yaml
+        spec: 
+        replicas: 4
+        ```
+1. Update `web\src\webui\pages\About.cshtml` with the following snippet to change the color
+    ```html
+    @page
+    @model AboutModel
+    <style type="text/css">
+        body {
+            background-color: red;
+        }
+    </style>
+    ```
+1. browse the kubernetes dashboard
+1. Navigate to pods: http://127.0.0.1:8001/#!/pod?namespace=default
+1. Click the name of a Web pod
+1. Copy the full image:tag as we'll replace that exact tag with a different version
+1. Re-tag the dev image you just made
+
+    - `docker tag $REGISTRY_NAME/demo42/web:dev1` [pasted value]
+    - `docker push `[pasted value]
+1. Back in the Kubernetes portal, kill one of the running pods
+
+
+# Alternative Demos
+
+## Using CLI to get POD info
+- Get the current image:tag
+    ```sh
+    kubectl get pods
+    # node one of the web pods
+    kubectl describe pods/web-64b4c9fc6-574sw
     ```
