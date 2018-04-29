@@ -24,3 +24,6 @@ We've tried to follow best practices for:
 - [ACR & ACR Build](./create/acr-build.md)
 - [Jenkins](./create/jenkins.md)
 - [Helm](./create/helm.md)
+
+
+## Demo Commands
