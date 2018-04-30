@@ -16,6 +16,10 @@ export RESOURCE_GROUP=$ACR_NAME
 export REGISTRY_NAME=${ACR_NAME}.azurecr.io/ 
 export AKV_NAME=$ACR_NAME-vault # name of the keyvault
 export GIT_TOKEN_NAME=stevelasker-git-access-token # keyvault secret name
+# eastus
+export HOST=demo42.eastus.cloudapp.azure.com
+# westeu
+export HOST=demo42.westeurope.cloudapp.azure.com/
 ```
 
 On first install, replace the top line of upgrade, with this install line:
@@ -25,7 +29,7 @@ helm install ./helm/ -n demo42 \
 ## Upgrade
 ```sh
 helm upgrade demo42 ./helm/ \
---reuse-values \
+--reset-values \
 --set web.host=$HOST \
 --set web.image=${REGISTRY_NAME}demo42/web:$TAG \
 --set api.image=${REGISTRY_NAME}demo42/quotes-api:$TAG \
@@ -41,5 +45,5 @@ helm upgrade demo42 ./helm/ \
 --set imageCredentials.password=$(az keyvault secret show \
                                          --vault-name $KEYVAULT \
                                          --name $ACR_NAME-pull-pwd \
-                                         --query value -o tsv) \
+                                         --query value -o tsv)
 ```

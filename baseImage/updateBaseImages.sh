@@ -45,14 +45,13 @@ docker pull microsoft/dotnet-nightly:${_base_image_version}-aspnetcore-runtime
 _new_image=${_registry_name}baseimages/microsoft/aspnetcore-runtime:linux-${_base_image_version}
 
 docker build \
-  -f runtime.Dockerfile \
+  -f runtime/Dockerfile \
   -t $_new_image \
   --build-arg BASE_IMAGE_VERSION=${_base_image_version} \
   --build-arg IMAGE_BUILD_DATE=`date +%Y%m%d-%H%M%S` \
   .
 
 docker push $_new_image
-exit
 
 echo ----------------------------
 echo Pull/Tag/Push dotnet SDK:${_base_image_version}
@@ -62,7 +61,7 @@ docker pull microsoft/dotnet-nightly:${_base_image_version}-sdk
 _new_image=${_registry_name}baseimages/microsoft/dotnet-sdk:linux-${_base_image_version}
 
 docker build \
-  -f sdk.Dockerfile \
+  -f sdk/Dockerfile \
   -t $_new_image \
   --build-arg BASE_IMAGE_VERSION=${_base_image_version} \
   --build-arg IMAGE_BUILD_DATE=`date +%Y%m%d-%H%M%S` \
