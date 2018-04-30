@@ -4,14 +4,18 @@ Used when I manually run helm charts for testing. A version of this is configure
 
 ## Install
 To switch between EastUS and West Europe instances, set the following env vars:
+ Common Environment Variables
 ```sh
-# DNS Name used for the NGINX load balancer
-# EastUS
-export HOST=demo42.eastus.cloudapp.azure.com
-# WestEuope
-export HOST=demo42.westeurope.cloudapp.azure.com
-#TAG
-export TAG=n1
+# Replace these values for your configuration
+# I've left our values in, as we use this for our demos, providing some examples
+export ACR_NAME=jengademos
+export RESOURCE_GROUP=$ACR_NAME
+# fully qualified url of the registry. 
+# This is where your registry would be
+# Accounts for registries in dogfood or other clouds like .gov, Germany and China
+export REGISTRY_NAME=${ACR_NAME}.azurecr.io/ 
+export AKV_NAME=$ACR_NAME-vault # name of the keyvault
+export GIT_TOKEN_NAME=stevelasker-git-access-token # keyvault secret name
 ```
 
 On first install, replace the top line of upgrade, with this install line:

@@ -2,29 +2,40 @@
 
 ## Presets
 - A set of env vars used for each demo
+    
+    Common Environment Variables
     ```sh
     # Replace these values for your configuration
     # I've left our values in, as we use this for our demos, providing some examples
-    export KEYVAULT=jengademoskv
-    # the secret name referenced within keyvault
-    export GIT_TOKEN_NAME=stevelasker-git-access-token
-    # where just the registry name is required
     export ACR_NAME=jengademos
+    export RESOURCE_GROUP=$ACR_NAME
     # fully qualified url of the registry. 
     # This is where your registry would be
     # Accounts for registries in dogfood or other clouds like .gov, Germany and China
-    export REGISTRY_NAME=$ACR_NAME.azurecr.io/
-    export TAG=dev1
+    export REGISTRY_NAME=${ACR_NAME}.azurecr.io/ 
+    export AKV_NAME=$ACR_NAME-vault # name of the keyvault
+    export GIT_TOKEN_NAME=stevelasker-git-access-token # keyvault secret name
     ```
+- Demo presets
+    export TAG=dev1
+
 - Setting the default registry, so each az acr command doesn't need to include `-r`
     ```sh
     az configure --defaults acr=$ACR_NAME
     ```
+
+## ACR Snippets
 - Listing builds
     While running the demo, I typically keep a terminal tab open with this command continually running.
     ```sh
     watch -n1 az acr build-task list-builds
     ```
+
+- Running a build
+    ```sh
+    az acr build-task run -n demo42quotesapi
+    ```
+## Developing Locally
 - Local builds
     ```sh
     docker-compose build \
@@ -35,6 +46,12 @@
                                         --query value -o tsv)
     docker-compose up
     ```
+
+- Cleanup null images
+    ```sh
+    docker rmi $(docker images --quiet --filter "dangling=true")
+    ```
+
 - Get AKS Credentials
     ```sh
     # EastUS

@@ -3,21 +3,31 @@ Info on [ACR Build](https://aka.ms/acr/build)
 
 ## Web Build-Task
 Builds the web front end of the app
+ Common Environment Variables
 ```sh
 # Replace these values for your configuration
 # I've left our values in, as we use this for our demos, providing some examples
-export REGISTRY_NAME=jengademos.azurecr.io/
-export KEYVAULT=stevelaskv
-export GIT_TOKEN_NAME=stevelasker-git-access-token
 export ACR_NAME=jengademos
+export RESOURCE_GROUP=$ACR_NAME
+# fully qualified url of the registry. 
+# This is where your registry would be
+# Accounts for registries in dogfood or other clouds like .gov, Germany and China
+export REGISTRY_NAME=${ACR_NAME}.azurecr.io/ 
+export AKV_NAME=$ACR_NAME-vault # name of the keyvault
+export GIT_TOKEN_NAME=stevelasker-git-access-token # keyvault secret name
+```
 
+```sh
 az acr build-task create \
   -n demo42web \
   --context https://github.com/demo42/web \
-  -t demo42/web:{{.Build.ID}} \
-  -f ./src/WebUI/Dockerfile \
+  -t demo42/quotes-api:{{.Build.ID}} \
+  -f ./src/QuoteService/Dockerfile \
   --build-arg REGISTRY_NAME=$REGISTRY_NAME \
-  --git-access-token $(az keyvault secret show --vault-name $KEYVAULT  --name $GIT_TOKEN_NAME --query value -o tsv) \
+  --git-access-token $(az keyvault secret show \
+                         --vault-name $AKV_NAME \
+                         --name $GIT_TOKEN_NAME \
+                         --query value -o tsv) \
   --registry $ACR_NAME 
   ```
 
@@ -30,12 +40,12 @@ az acr build-task create \
   --context https://github.com/demo42/quotes -t demo42/quotes-api:{{.Build.ID}} \
   -f ./src/WebUI/Dockerfile \
   --git-access-token $(az keyvault secret show \
-                         --vault-name $KEYVAULT \
+                         --vault-name $AKV_NAME \
                          --name $GIT_TOKEN_NAME \
                          --query value -o tsv) \
   --build-arg REGISTRY_NAME=$REGISTRY_NAME \
   --secret-build-arg A_CONNECTIONSTRING=$(az keyvault secret show \
-                                         --vault-name $KEYVAULT \
+                                         --vault-name $AKV_NAME \
                                          --name demo42-quotes-sql-connectionstring-eastus \
                                          --query value -o tsv) \
   --registry $ACR_NAME 
@@ -48,14 +58,14 @@ The only difference here is the keyvault secret for the database
 az acr build-task create \
   -n demo42quotesapi \
   --context https://github.com/demo42/quotes -t demo42/quotes-api:{{.Build.ID}} \
-  -f ./src/WebUI/Dockerfile \
+  -f ./src/QuoteService/Dockerfile \
   --git-access-token $(az keyvault secret show \
-                         --vault-name $KEYVAULT \
+                         --vault-name $AKV_NAME \
                          --name $GIT_TOKEN_NAME \
                          --query value -o tsv) \
   --build-arg REGISTRY_NAME=$REGISTRY_NAME \
   --secret-build-arg A_CONNECTIONSTRING=$(az keyvault secret show \
-                                         --vault-name $KEYVAULT \
+                                         --vault-name $AKV_NAME \
                                          --name demo42-quotes-sql-connectionstring-westeu \
                                          --query value -o tsv) \
   --registry $ACR_NAME 
@@ -80,7 +90,7 @@ az acr webhook create \
   --actions push \
   --name demo42QuotesApiEastus \
   --headers Authorization=$(az keyvault secret show \
-                            --vault-name $KEYVAULT \
+                            --vault-name $AKV_NAME \
                             --name demo42-webhook-auth-header \
                             --query value -o tsv) \
   --uri http://http://jengajenkins.eastus.cloudapp.azure.com//jenkins/generic-webhook-trigger/invoke

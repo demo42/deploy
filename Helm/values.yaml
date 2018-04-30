@@ -3,9 +3,11 @@ replicaCount: 1
 
 web:
   image: demo42/web:vn
+  replicas: 1
 
 api:
   image: demo42/quotes-api:vn
+  replicas: 1
 
 quotes-api-db-connectionstring: myconnectionNotStringed
 
