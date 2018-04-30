@@ -45,6 +45,7 @@
                                         --name demo42-quotes-sql-connectionstring-eastus \
                                         --query value -o tsv)
     docker-compose up
+    open http://localhost
     ```
 
 - Cleanup null images
@@ -98,7 +99,13 @@
     - `docker push `[pasted value]
 1. Back in the Kubernetes portal, kill one of the running pods
 
+# Base Image Updates - AKS OS & Framework Patching
 
+1.  View the About page
+    -   Notice the Base **Image Version** and the **Image Built Date**
+1.  Rebuild the base image
+    - Run the script `web/src/baseImage/updateBaseImages.sh`
+    - Watch the build-tasks `watch -n1 az acr build-task list-builds`
 # Alternative Demos
 
 ## Using CLI to get POD info
