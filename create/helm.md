@@ -20,11 +20,11 @@ export GIT_TOKEN_NAME=stevelasker-git-access-token # keyvault secret name
 
 On first install, replace the top line of upgrade, with this install line:
 ```sh
-helm install . -n demo42 \
+helm install ./helm/ -n demo42 \
 ```
 ## Upgrade
 ```sh
-helm upgrade demo42 . \
+helm upgrade demo42 ./helm/ \
 --reuse-values \
 --set web.host=$HOST \
 --set web.image=${REGISTRY_NAME}demo42/web:$TAG \
