@@ -38,7 +38,7 @@ Until I get the secret configured properly, I'm injecting the database password 
 az acr build-task create \
   -n demo42quotesapi \
   --context https://github.com/demo42/quotes -t demo42/quotes-api:{{.Build.ID}} \
-  -f ./src/WebUI/Dockerfile \
+  -f ./src/QuoteService/Dockerfile \
   --git-access-token $(az keyvault secret show \
                          --vault-name $AKV_NAME \
                          --name $GIT_TOKEN_NAME \
@@ -95,3 +95,4 @@ az acr webhook create \
                             --query value -o tsv) \
   --uri http://http://jengajenkins.eastus.cloudapp.azure.com//jenkins/generic-webhook-trigger/invoke
 ```
+
