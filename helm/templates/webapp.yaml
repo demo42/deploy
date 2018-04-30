@@ -45,6 +45,8 @@ spec:
     environment: 
         - name: QuotesUri
           value: http://quotes-api
+        - name: Logging__LogLevel__Default
+          value: Trace
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
