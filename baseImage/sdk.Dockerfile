@@ -1,0 +1,7 @@
+ARG BASE_IMAGE_VERSION
+FROM microsoft/dotnet-nightly:${BASE_IMAGE_VERSION}-sdk
+# added a second time to ensure the arg is in scope in this stage
+ARG BASE_IMAGE_VERSION 
+ARG IMAGE_BUILD_DATE
+ENV BASE_IMAGE_VERSION=${BASE_IMAGE_VERSION}
+ENV IMAGE_BUILD_DATE=${IMAGE_BUILD_DATE}
