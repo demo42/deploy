@@ -49,7 +49,7 @@ docker build \
   -t $_new_image \
   --build-arg BASE_IMAGE_VERSION=${_base_image_version} \
   --build-arg IMAGE_BUILD_DATE=`date +%Y%m%d-%H%M%S` \
-  .
+  ./runtime
 
 docker push $_new_image
 
@@ -65,5 +65,5 @@ docker build \
   -t $_new_image \
   --build-arg BASE_IMAGE_VERSION=${_base_image_version} \
   --build-arg IMAGE_BUILD_DATE=`date +%Y%m%d-%H%M%S` \
-  .
+  ./sdk
 docker push $_new_image
