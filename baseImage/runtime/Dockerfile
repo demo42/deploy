@@ -1,6 +1,7 @@
 #Becomes: ${REGISTRY_NAME}baseimages/microsoft/aspnetcore-runtime:linux-2.1 AS base
+# digest: jengademos.azurecr.io/microsoft/dotnet@sha256:b1f3bf53ae60d00c059a8d5f15ede7fc69d5f20d3b417ceaacb5c5c2302b7d9e
 ARG REGISTRY_NAME
-FROM $(REGISTY_NAME}microsoft/dotnet-nightly:2.1-aspnetcore-runtime
+FROM ${REGISTRY_NAME}microsoft/dotnet:2.1-aspnetcore-runtime
 # switch the base image to simulate a valid docker build
 #   but a broken runtime the cluster will catch
 #FROM node:9-alpine

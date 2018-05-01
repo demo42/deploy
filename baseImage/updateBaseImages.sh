@@ -26,7 +26,7 @@ fi
 
 if [ -z $_registry_name ]
 then
-    _registry_name=$REGISTRY_NAME
+    _registry_name=${REGISTRY_NAME}
 
     if [ -z $_registry_name ]
     then
@@ -36,16 +36,36 @@ then
 fi
 echo "DOTNET_VERSION: "$_base_image_version
 echo "REGISTRY:       "$_registry_name
+_new_image=${_registry_name}baseimages/microsoft/aspnetcore-runtime:linux-${_base_image_version}
+echo ----------------------------
+echo Update:${_base_image_version}
+echo ----------------------------
+
+cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )/runtime"
+echo ${_new_image}
+
+docker build \
+    -f ./Dockerfile \
+    -t ${_new_image} \
+    --build-arg REGISTRY_NAME=${REGISTRY_NAME} \
+    --build-arg IMAGE_BUILD_DATE=`date +%Y%m%d-%H%M%S` \
+.
+
+docker push $_new_image
 
 cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/sdk
 echo $PWD
-
-_new_image=${_registry_name}baseimages/microsoft/dotnet-sdk:linux-${_base_image_version}
-echo $_new_image
-docker build \
-  -f ./Dockerfile \
-  -t $_new_image \
-  --build-arg REGISTRY_NAME=$REGISTRY_NAME \
-  --build-arg IMAGE_BUILD_DATE=`date +%Y%m%d-%H%M%S` \
-   .
-docker push $_new_image
+if [ _sdk -eq 1 ]
+then 
+    _new_image=${_registry_name}baseimages/microsoft/dotnet-sdk:linux-${_base_image_version}
+    echo ----------------------------
+    echo Update:${_base_image_version}
+    echo ----------------------------
+    docker build \
+    -f ./Dockerfile \
+    -t $_new_image \
+    --build-arg REGISTRY_NAME=$REGISTRY_NAME \
+    --build-arg IMAGE_BUILD_DATE=`date +%Y%m%d-%H%M%S` \
+    .
+    docker push $_new_image
+fi
