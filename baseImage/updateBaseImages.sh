@@ -1,69 +1,51 @@
 #!/bin/bash
 set -e
-while getopts ':v:r:' arg; do
+while getopts ':r:s:' arg; do
     case ${arg} in
-        v)
-            _base_image_version=$OPTARG
-            ;;
-        r) 
-            _registry_name=$OPTARG
+        s)
+            _sdk=1
             ;;
         \? )
             echo "Usage: cmd [-h] [-t]"
-            echo Pulls the latest dotnet/aspnetcore images 
-            echo Pushes to the -r specified registry
-            echo Parameters
-            echo "   -v version to pull"
-            echo "   -r ACR Private registry [OPTIONAL - uses REGISTRY_NAME if not specified]"
+            echo rebuilds the base image, setting build-args
+            echo will always update the runtime, pass -s to update the sdk as well
+            e2cho Parameters
+            echo "   -r update the runtime base image"
 
             exit
 
             ;;
     esac
 done
+
+# default base image version to 2.1
+if [ -z $_base_image_version ]
+then
+    _base_image_version=2.1
+fi
+
 if [ -z $_registry_name ]
 then
     _registry_name=$REGISTRY_NAME
 
     if [ -z $_registry_name ]
     then
-        echo ERROR: -r required 
+        echo ERROR: REGISTRY_NAME environment variable required eg: jengademos.azurecr.io/
         exit
     fi
 fi
-echo "IMAGE:    "$_base_image_version
-echo "REGISTRY: "$_registry_name
+echo "DOTNET_VERSION: "$_base_image_version
+echo "REGISTRY:       "$_registry_name
 
-cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-
-echo ----------------------------
-echo Pull/Tag/Push aspnetcore RUNTIME:${_base_image_version}
-echo ----------------------------
-
-docker pull microsoft/dotnet-nightly:${_base_image_version}-aspnetcore-runtime
-
-_new_image=${_registry_name}baseimages/microsoft/aspnetcore-runtime:linux-${_base_image_version}
-
-docker build \
-  -f runtime/Dockerfile \
-  -t $_new_image \
-  --build-arg BASE_IMAGE_VERSION=${_base_image_version} \
-  --build-arg IMAGE_BUILD_DATE=`date +%Y%m%d-%H%M%S` \
-  ./runtime
-
-docker push $_new_image
-
-echo ----------------------------
-echo Pull/Tag/Push dotnet SDK:${_base_image_version}
-echo ----------------------------
-docker pull microsoft/dotnet-nightly:${_base_image_version}-sdk
+cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/sdk
+echo $PWD
 
 _new_image=${_registry_name}baseimages/microsoft/dotnet-sdk:linux-${_base_image_version}
-
+echo $_new_image
 docker build \
-  -f sdk/Dockerfile \
+  -f ./Dockerfile \
   -t $_new_image \
-  --build-arg BASE_IMAGE_VERSION=${_base_image_version} \
+  --build-arg REGISTRY_NAME=$REGISTRY_NAME \
   --build-arg IMAGE_BUILD_DATE=`date +%Y%m%d-%H%M%S` \
-  ./sdk
+   .
 docker push $_new_image
