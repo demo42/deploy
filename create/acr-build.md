@@ -22,6 +22,7 @@ az acr build-task create \
   -n demo42web \
   --context https://github.com/demo42/web \
   -t demo42/quotes-api:{{.Build.ID}} \
+  --cpu 2 \
   -f ./src/QuoteService/Dockerfile \
   --build-arg REGISTRY_NAME=$REGISTRY_NAME \
   --git-access-token $(az keyvault secret show \
@@ -59,6 +60,7 @@ az acr build-task create \
   -n demo42quotesapi \
   --context https://github.com/demo42/quotes -t demo42/quotes-api:{{.Build.ID}} \
   -f ./src/QuoteService/Dockerfile \
+  --cpu 2 \
   --git-access-token $(az keyvault secret show \
                          --vault-name $AKV_NAME \
                          --name $GIT_TOKEN_NAME \
