@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+_sdk=0
 while getopts ':r:s:' arg; do
     case ${arg} in
         s)
@@ -48,15 +49,15 @@ docker build \
     -f ./Dockerfile \
     -t ${_new_image} \
     --build-arg REGISTRY_NAME=${REGISTRY_NAME} \
-    --build-arg IMAGE_BUILD_DATE=`date +%Y%m%d-%H%M%S` \
+    --build-arg A_IMAGE_BUILD_DATE=`date +%Y%m%d-%H%M%S` \
 .
 
 docker push $_new_image
 
-cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/sdk
 echo $PWD
-if [ _sdk -eq 1 ]
+if [ _sdk==1 ]
 then 
+    cd ../sdk
     _new_image=${_registry_name}baseimages/microsoft/dotnet-sdk:linux-${_base_image_version}
     echo ----------------------------
     echo Update:${_base_image_version}
@@ -65,7 +66,8 @@ then
     -f ./Dockerfile \
     -t $_new_image \
     --build-arg REGISTRY_NAME=$REGISTRY_NAME \
-    --build-arg IMAGE_BUILD_DATE=`date +%Y%m%d-%H%M%S` \
+    --build-arg A_IMAGE_BUILD_DATE=`date +%Y%m%d-%H%M%S` \
     .
+
     docker push $_new_image
 fi
