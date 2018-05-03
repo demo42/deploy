@@ -24,7 +24,6 @@ az acr build-task create \
   --cpu 2 \
   -f ./baseImage/sdk/Dockerfile \
   --build-arg REGISTRY_NAME=$REGISTRY_NAME \
-  --build-arg 
   --git-access-token $(az keyvault secret show \
                          --vault-name $AKV_NAME \
                          --name $GIT_TOKEN_NAME \

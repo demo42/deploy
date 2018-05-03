@@ -37,7 +37,7 @@ then
 fi
 echo "DOTNET_VERSION: "$_base_image_version
 echo "REGISTRY:       "$_registry_name
-_new_image=${_registry_name}baseimages/microsoft/aspnetcore-runtime:linux-${_base_image_version}
+_new_image=${_registry_name}baseimages/microsoft/aspnetcore-runtime:linux-${_base_image_version}-azure
 echo ----------------------------
 echo Update:${_base_image_version}
 echo ----------------------------
@@ -51,9 +51,8 @@ docker build \
     --build-arg REGISTRY_NAME=${REGISTRY_NAME} \
     --build-arg A_IMAGE_BUILD_DATE=`date +%Y%m%d-%H%M%S` \
 .
-
 docker push $_new_image
-
+exit
 echo $PWD
 if [ _sdk==1 ]
 then 

@@ -46,18 +46,4 @@ helm upgrade demo42 ./helm/ \
                                          --vault-name $AKV_NAME \
                                          --name $ACR_NAME-pull-pwd \
                                          --query value -o tsv)
-docker login jengademos.azurecr.io -u 2cc69792-d663-4949-a702-5fb735090b07 -p 3c0a183b-f0b8-4cf2-8e9a-5b8f618498b1
-docker pull jengademos.azurecr.io/baseimages/microsoft/dotnet-sdk:linux-2.1
-docker pull jengademos.azurecr.io/baseimages/microsoft/aspnetcore-runtime:linux-2.1
-
-helm upgrade demo42 ./helm/ \
---reset-values \
---set web.host=$HOST \
---set web.image=${REGISTRY_NAME}demo42/web:$TAG \
---set api.image=${REGISTRY_NAME}demo42/quotes-api:$TAG \
---set dbConnectionString=$(az keyvault secret show \
-                                         --vault-name $KEYVAULT \
-                                         --name demo42-quotes-sql-connectionstring-eastus \
-                                         --query value -o tsv)
-
 ```
