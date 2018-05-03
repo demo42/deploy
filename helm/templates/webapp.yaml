@@ -43,10 +43,8 @@ spec:
         app: web
     type: ClusterIP
     environment: 
-        - name: QuotesUri
-          value: http://quotes-api
-        - name: Logging__LogLevel__Default
-          value: Trace
+    - name: QuotesUri
+      value: http://quotes-api
 ---
 apiVersion: extensions/v1beta1
 kind: Ingress
