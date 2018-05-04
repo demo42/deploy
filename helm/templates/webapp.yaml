@@ -27,13 +27,15 @@ spec:
         env:
         - name: QuotesUri
           value: http://quotes-api
+        - name: ConfigPath
+          value: "/etc/secrets"
         volumeMounts:
             - name: app-secrets
-              mountPath: "/etc/quotes-secrets"
+              mountPath: "/etc/secrets"
       volumes:
       - name: app-secrets
         secret:
-          secretName: quotes-api-db-connectionstring
+          secretName: important-secret
           defaultMode: 256
       imagePullSecrets:
         - name: app-registry-secret

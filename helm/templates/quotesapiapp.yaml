@@ -26,14 +26,14 @@ spec:
         - containerPort: 80
         env:
         - name: ConfigPath
-          value: "/etc/quotes-secrets"
+          value: "/etc/secrets"
         volumeMounts:
             - name: app-secrets
-              mountPath: "/etc/quotes-secrets"
+              mountPath: "/etc/secrets"
       volumes:
       - name: app-secrets
         secret:
-          secretName: quotes-api-db-connectionstring
+          secretName: quotes-secret
           defaultMode: 256
       imagePullSecrets:
         - name: app-registry-secret
