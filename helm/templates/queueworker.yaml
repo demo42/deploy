@@ -1,0 +1,53 @@
+apiVersion: apps/{{ .Values.apiVersion }}
+kind: Deployment
+metadata:
+  name: queueworker
+  labels:
+    app: {{ template "demo42.name" . }}
+    chart: {{ template "demo42.chart" . }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}  
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: queueworker
+  template: 
+    metadata:
+     labels:
+        app: queueworker
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+      - name: queueworker
+        image: {{ .Values.queueworker.image }}
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: ConfigPath
+          value: "/etc/quotes-secrets"
+        volumeMounts:
+            - name: app-secrets
+              mountPath: "/etc/quotes-secrets"
+      volumes:
+      - name: app-secrets
+        secret:
+          secretName: quotes-api-db-connectionstring
+          defaultMode: 256
+      imagePullSecrets:
+        - name: app-registry-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+    # used for in-cluster dns discovery
+    name: queueworker
+spec:
+    ports:
+        - port: 80
+          protocol: TCP
+          targetPort: 80
+    selector:
+        app: queueworker
+    type: ClusterIP

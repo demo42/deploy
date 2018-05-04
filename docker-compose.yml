@@ -4,25 +4,45 @@ services:
     # http://localhost:80
     image: ${REGISTRY_NAME}demo42/web:${TAG}
     build:
+      args: 
+        - REGISTRY_NAME=jengademos.azurecr.io/
       context: ../web/
       dockerfile: ./src/WebUI/Dockerfile
     ports:
       - "80:80"
     environment:
       - QuotesUri=http://quotes-api/
+      - StorageConnectionString=[yourConnectionString]
+      - QueueName=important
     networks:
       - webnet
   quotes-api:
     # http://localhost:8080/quotes/rand
     image: ${REGISTRY_NAME}demo42/quotes-api:${TAG}
     build:
+      args: 
+        - REGISTRY_NAME=jengademos.azurecr.io/
       context: ../quotes/
       dockerfile: ./src/QuoteService/Dockerfile
+    environment:
+      - ConnectionString=Server=[yourConnectionString]
+      #- ConfigPath=/etc/quotes-secrets
+    ports:
+      - "8080:80"
+    networks:
+      - webnet
+  queueworker:
+    image: ${REGISTRY_NAME}demo42/queueworker:${TAG}
+    build:
+      args: 
+        - REGISTRY_NAME=jengademos.azurecr.io/
+      context: ../queueworker/
+      dockerfile: ./src/Important/Dockerfile
     environment:
       #- ConnectionString=$DBCONNECTIONSTRING
       - ConfigPath=/etc/quotes-secrets
     ports:
-      - "8080:80"
+      - "8081:80"
     networks:
       - webnet
 networks:

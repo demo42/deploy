@@ -33,12 +33,13 @@ az acr build-task create \
 
 
 ```sh
+BRANCH=master]
 az acr build-task create \
   -n demo42web \
   --context https://github.com/demo42/web \
   -t demo42/web:{{.Build.ID}} \
   --cpu 2 \
-  --branch completedish \
+  --branch $BRANCH \
   -f ./src/WebUI/Dockerfile \
   --build-arg REGISTRY_NAME=$REGISTRY_NAME \
   --git-access-token $(az keyvault secret show \
@@ -50,14 +51,15 @@ az acr build-task create \
 
 ## Quotes API 
 Builds the back-end Quotes API
-Until I get the secret configured properly, I'm injecting the database password into the image - ***bad panda***
 ```sh
+BRANCH=master
 az acr build-task create \
-  -n demo42quotesapi \
-  --context https://github.com/demo42/quotes -t demo42/quotes-api:{{.Build.ID}} \
+  -n demo42queueworker \
+  --context https://github.com/demo42/quotes \
+  -t demo42/quotes-api:{{.Build.ID}} \
   -f ./src/QuoteService/Dockerfile \
   --cpu 2 \
-  --branch completedish \
+  --branch $BRANCH \
   --build-arg REGISTRY_NAME=$REGISTRY_NAME \
   --git-access-token $(az keyvault secret show \
                          --vault-name $AKV_NAME \
@@ -65,7 +67,27 @@ az acr build-task create \
                          --query value -o tsv) \
   --registry $ACR_NAME 
   ```
-  
+
+## QueueWorker
+Builds the demo42/queueworker image that pulls "important" stuff off the queue and saves it to the unlreiable backend system
+```sh
+BRANCH=master
+az acr build-task create \
+  -n demo42queueworker \
+  --context https://github.com/demo42/queueworker \
+  -t demo42/queueworker:{{.Build.ID}} \
+  -f ./src/Important/Dockerfile \
+  --cpu 2 \
+  --branch $BRANCH \
+  --build-arg REGISTRY_NAME=$REGISTRY_NAME \
+  --git-access-token $(az keyvault secret show \
+                         --vault-name $AKV_NAME \
+                         --name $GIT_TOKEN_NAME \
+                         --query value -o tsv) \
+  --registry $ACR_NAME 
+  ```
+
+
 ## ACR Webhoks
 These are some snippets, that aren't *yet* scripted out
 However, here's the list of webhooks used:

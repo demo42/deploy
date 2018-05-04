@@ -33,6 +33,7 @@ helm upgrade demo42 ./helm/ \
 --set web.host=$HOST \
 --set web.image=${REGISTRY_NAME}demo42/web:$TAG \
 --set api.image=${REGISTRY_NAME}demo42/quotes-api:$TAG \
+--set queueworker.image=${REGISTRY_NAME}demo42/queueworker:aa9b
 --set StorageConnectionString=$(az keyvault secret show \
                             --vault-name $AKV_NAME \
                             --name demo42-StorageConnectionString-eastus \
@@ -55,17 +56,5 @@ helm upgrade demo42 ./helm/ \
                                     --vault-name $AKV_NAME \
                                     --name $ACR_NAME-pull-pwd \
                                     --query value -o tsv)
-```
 
-helm upgrade demo42 ./helm/ \
---reuse-values \
---set ConnectionString=$(az keyvault secret show \
-                            --vault-name $AKV_NAME \
-                            --name demo42-quotes-sql-connectionstring-eastus \
-                            --query value -o tsv) \
---set StorageConnectionString=$(az keyvault secret show \
-                            --vault-name $AKV_NAME \
-                            --name demo42-StorageConnectionString-eastus \
-                            --query value -o tsv) \
---set QueueName=important 
---set queueworker.replicas = 1
+```
