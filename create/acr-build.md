@@ -38,6 +38,7 @@ az acr build-task create \
   --context https://github.com/demo42/web \
   -t demo42/web:{{.Build.ID}} \
   --cpu 2 \
+  --branch completedish \
   -f ./src/WebUI/Dockerfile \
   --build-arg REGISTRY_NAME=$REGISTRY_NAME \
   --git-access-token $(az keyvault secret show \
@@ -47,7 +48,7 @@ az acr build-task create \
   --registry $ACR_NAME 
   ```
 
-## Quotes API - w/CONNECTIONSTRING - East US
+## Quotes API 
 Builds the back-end Quotes API
 Until I get the secret configured properly, I'm injecting the database password into the image - ***bad panda***
 ```sh
@@ -56,36 +57,12 @@ az acr build-task create \
   --context https://github.com/demo42/quotes -t demo42/quotes-api:{{.Build.ID}} \
   -f ./src/QuoteService/Dockerfile \
   --cpu 2 \
+  --branch completedish \
   --build-arg REGISTRY_NAME=$REGISTRY_NAME \
   --git-access-token $(az keyvault secret show \
                          --vault-name $AKV_NAME \
                          --name $GIT_TOKEN_NAME \
                          --query value -o tsv) \
-  --secret-build-arg A_CONNECTIONSTRING=$(az keyvault secret show \
-                                         --vault-name $AKV_NAME \
-                                         --name demo42-quotes-sql-connectionstring-eastus \
-                                         --query value -o tsv) \
-  --registry $ACR_NAME 
-  ```
-## Quotes API - w/CONNECTIONSTRING - WestEurope
-***Temporary*** until passwords can be moved to kubernetes secrets. 
-The only difference here is the keyvault secret for the database
-
-```sh
-az acr build-task create \
-  -n demo42quotesapi \
-  --context https://github.com/demo42/quotes -t demo42/quotes-api:{{.Build.ID}} \
-  -f ./src/QuoteService/Dockerfile \
-  --cpu 2 \
-  --git-access-token $(az keyvault secret show \
-                         --vault-name $AKV_NAME \
-                         --name $GIT_TOKEN_NAME \
-                         --query value -o tsv) \
-  --build-arg REGISTRY_NAME=$REGISTRY_NAME \
-  --secret-build-arg A_CONNECTIONSTRING=$(az keyvault secret show \
-                                         --vault-name $AKV_NAME \
-                                         --name demo42-quotes-sql-connectionstring-westeu \
-                                         --query value -o tsv) \
   --registry $ACR_NAME 
   ```
   

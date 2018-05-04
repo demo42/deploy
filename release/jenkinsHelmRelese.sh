@@ -14,8 +14,12 @@ case $REPOSITORY in
     helm upgrade demo42 ./helm/ --reuse-values --set web.image=$REGISTRY/$REPOSITORY:$TAG 
   ;;
   demo42/quotes-api*)
-    echo helm upgrade demo42 ./helm/ --reuse-values --set api.image=$REGISTRY/$REPOSITORY:$TAG
-    helm upgrade demo42 ./helm/ --reuse-values --set api.image=$REGISTRY/$REPOSITORY:$TAG
+    echo helm upgrade demo42 ./helm/ --reuse-values --set quotes-api.image=$REGISTRY/$REPOSITORY:$TAG
+    helm upgrade demo42 ./helm/ --reuse-values --set quotes-api.image=$REGISTRY/$REPOSITORY:$TAG
+  ;;
+  demo42/queueworker*)
+    echo helm upgrade demo42 ./helm/ --reuse-values --set queueworker.image=$REGISTRY/$REPOSITORY:$TAG
+    helm upgrade demo42 ./helm/ --reuse-values --set queueworker.image=$REGISTRY/$REPOSITORY:$TAG
   ;;
   *)
     echo helm upgrade demo42 . --reuse-values 

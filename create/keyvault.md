@@ -57,10 +57,23 @@ export GIT_TOKEN_NAME=stevelasker-git-access-token # keyvault secret name
         --name demo42-quotes-sql-connectionstring-eastus \
         --value $CONNECTIONSTRING_EASTUS
 
+    STORAGECONNECTIONSTRING_EASTUS=[ Storage Connection String]
+    az keyvault secret set \
+        --vault-name $AKV_NAME \
+        --name demo42-StorageConnectionString-eastus \
+        --value $STORAGECONNECTIONSTRING_EASTUS
+
     CONNECTIONSTRING_WESTEU=[SQL ConnectionString]
     az keyvault secret set \
         --vault-name $AKV_NAME \
         --name demo42-quotes-sql-connectionstring-westeu \
         --value $CONNECTIONSTRING_WESTEU
+
+    STORAGECONNECTIONSTRING_WESTEU=[ Storage Connection String]
+    az keyvault secret set \
+        --vault-name $AKV_NAME \
+        --name demo42-StorageConnectionString-westeu \
+        --value $STORAGECONNECTIONSTRING_WESTEU
+
     ```
 

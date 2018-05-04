@@ -24,6 +24,9 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 80
+        env:
+        - name: ConfigPath
+          value: "/etc/quotes-secrets"
         volumeMounts:
             - name: app-secrets
               mountPath: "/etc/quotes-secrets"
@@ -34,7 +37,6 @@ spec:
           defaultMode: 256
       imagePullSecrets:
         - name: app-registry-secret
-
 ---
 apiVersion: v1
 kind: Service
