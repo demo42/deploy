@@ -27,6 +27,9 @@ spec:
         env:
         - name: QuotesUri
           value: http://quotes-api
+        volumeMounts:
+            - name: app-secrets
+              mountPath: "/etc/quotes-secrets"
       volumes:
       - name: app-secrets
         secret:
