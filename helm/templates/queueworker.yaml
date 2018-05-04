@@ -33,7 +33,7 @@ spec:
       volumes:
       - name: app-secrets
         secret:
-          secretName: quotes-secret
+          secretName: important-secret
           defaultMode: 256
       imagePullSecrets:
         - name: app-registry-secret

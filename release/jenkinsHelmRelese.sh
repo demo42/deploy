@@ -14,13 +14,8 @@ case $REPOSITORY in
     helm upgrade demo42 ./helm/ --reuse-values --set web.image=$REGISTRY/$REPOSITORY:$TAG 
   ;;
   demo42/quotes-api*)
-    echo helm upgrade demo42 ./helm/ --reuse-values --set quotes-api.image=$REGISTRY/$REPOSITORY:$TAG
-    helm upgrade demo42 ./helm/ --reuse-values --set quotes-api.image=$REGISTRY/$REPOSITORY:$TAG
-    --set StorageConnectionString=$(az keyvault secret show \
-                            --vault-name $AKV_NAME \
-                            --name demo42-StorageConnectionString-eastus \
-                            --query value -o tsv) \
-
+    echo helm upgrade demo42 ./helm/ --reuse-values --set quotesApi.image=$REGISTRY/$REPOSITORY:$TAG
+    helm upgrade demo42 ./helm/ --reuse-values --set quotesApi.image=$REGISTRY/$REPOSITORY:$TAG
   ;;
   demo42/queueworker*)
     echo helm upgrade demo42 ./helm/ --reuse-values --set queueworker.image=$REGISTRY/$REPOSITORY:$TAG

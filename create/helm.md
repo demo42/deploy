@@ -32,8 +32,8 @@ helm upgrade demo42 ./helm/ \
 --reuse-values \
 --set web.host=$HOST \
 --set web.image=${REGISTRY_NAME}demo42/web:$TAG \
---set api.image=${REGISTRY_NAME}demo42/quotes-api:$TAG \
---set queueworker.image=${REGISTRY_NAME}demo42/queueworker:aa9b
+--set quotesApi.image=${REGISTRY_NAME}demo42/quotes-api:$TAG \
+--set queueworker.image=${REGISTRY_NAME}demo42/queueworker:$TAG \
 --set StorageConnectionString=$(az keyvault secret show \
                             --vault-name $AKV_NAME \
                             --name demo42-StorageConnectionString-eastus \
