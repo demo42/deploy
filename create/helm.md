@@ -31,20 +31,16 @@ helm install ./helm/ -n demo42 \
 helm upgrade demo42 ./helm/ \
 --reuse-values \
 --set web.host=$HOST \
---set web.image=${REGISTRY_NAME}demo42/web:$TAG \
---set quotesApi.image=${REGISTRY_NAME}demo42/quotes-api:$TAG \
---set queueworker.image=${REGISTRY_NAME}demo42/queueworker:$TAG \
+--set web.image=${REGISTRY_NAME}demo42/web:aa9j \
+--set quotesApi.image=${REGISTRY_NAME}demo42/quotes-api:aa9k \
+--set queueworker.image=${REGISTRY_NAME}demo42/queueworker:aa9f \
 --set StorageConnectionString=$(az keyvault secret show \
                             --vault-name $AKV_NAME \
-                            --name demo42-StorageConnectionString-eastus \
+                            --name demo42-StorageConnectionString-westeu \
                             --query value -o tsv) \
 --set ConnectionString=$(az keyvault secret show \
                             --vault-name $AKV_NAME \
-                            --name demo42-quotes-sql-connectionstring-eastus \
-                            --query value -o tsv) \
---set StorageConnectionString=$(az keyvault secret show \
-                            --vault-name $AKV_NAME \
-                            --name demo42-StorageConnectionString-eastus \
+                            --name demo42-quotes-sql-connectionstring-westeu \
                             --query value -o tsv) \
 --set QueueName=important \
 --set imageCredentials.registry=$ACR_NAME.azurecr.io \
