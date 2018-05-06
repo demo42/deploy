@@ -33,7 +33,7 @@ az acr build-task create \
 
 
 ```sh
-BRANCH=master]
+BRANCH=master
 az acr build-task create \
   -n demo42web \
   --context https://github.com/demo42/web \
@@ -81,10 +81,44 @@ az acr build-task create \
   --branch $BRANCH \
   --build-arg REGISTRY_NAME=$REGISTRY_NAME \
   --git-access-token $(az keyvault secret show \
-                         --vault-name $AKV_NAME \
-                         --name $GIT_TOKEN_NAME \
+                         --vault-name ${AKV_NAME} \
+                         --name ${GIT_TOKEN_NAME} \
                          --query value -o tsv) \
   --registry $ACR_NAME 
+  ```
+
+## BaseImages
+
+- dotnet runtime
+  ```sh
+  az acr build-task create \
+    -n baseimagaspnetcoreruntime \
+    -c https://github.com/demo42/baseimage-aspnetcoreruntime \
+    -t baseimages/microsoft/aspnetcore-runtime:linux-2.1 \
+    -f ./runtime/Dockerfile \
+    --cpu 2 \
+    --build-arg REGISTRY_NAME=$REGISTRY_NAME \
+    --git-access-token $(az keyvault secret show \
+                          --vault-name $AKV_NAME \
+                          --name $GIT_TOKEN_NAME \
+                          --query value -o tsv) \
+    --registry $ACR_NAME
+  ```
+
+- aspnetcore sdk
+  ```sh
+  az acr build-task create \
+    -n baseimagedotnetsdk \
+    -c https://github.com/demo42/baseimge-dotnet-sdk\
+    -t baseimages/microsoft/dotnet-sdk:linux-2.1 \
+    -f ./runtime/Dockerfile \
+    --cpu 2 \
+    --build-arg REGISTRY_NAME=$REGISTRY_NAME \
+    --git-access-token $(az keyvault secret show \
+                          --vault-name $AKV_NAME \
+                          --name $GIT_TOKEN_NAME \
+                          --query value -o tsv) \
+    --registry $ACR_NAME
   ```
 
 
