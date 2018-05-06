@@ -95,7 +95,6 @@ az acr build-task create \
     -n baseimagaspnetcoreruntime \
     -c https://github.com/demo42/baseimage-aspnetcoreruntime \
     -t baseimages/microsoft/aspnetcore-runtime:linux-2.1 \
-    -f ./runtime/Dockerfile \
     --cpu 2 \
     --build-arg REGISTRY_NAME=$REGISTRY_NAME \
     --git-access-token $(az keyvault secret show \
@@ -111,7 +110,6 @@ az acr build-task create \
     -n baseimagedotnetsdk \
     -c https://github.com/demo42/baseimge-dotnet-sdk\
     -t baseimages/microsoft/dotnet-sdk:linux-2.1 \
-    -f ./runtime/Dockerfile \
     --cpu 2 \
     --build-arg REGISTRY_NAME=$REGISTRY_NAME \
     --git-access-token $(az keyvault secret show \
