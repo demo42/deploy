@@ -1,5 +1,11 @@
 # A list of saved commands I use during demos
 
+## Links
+- http://jengajenkins.eastus.cloudapp.azure.com
+- http://demo42-helloworld.eastus.cloudapp.azure.com/
+- http://demo42.eastus.cloudapp.azure.com/
+- http://demo42.westeurope.cloudapp.azure.com/
+
 ## Presets
 - A set of env vars used for each demo
     
