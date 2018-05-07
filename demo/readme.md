@@ -16,47 +16,15 @@
     export AKV_NAME=$ACR_NAME-vault # name of the keyvault
     export GIT_TOKEN_NAME=stevelasker-git-access-token # keyvault secret name
     ```
-- Demo presets
-    export TAG=dev1
 
 - Setting the default registry, so each az acr command doesn't need to include `-r`
     ```sh
     az configure --defaults acr=$ACR_NAME
     ```
-
-## ACR Snippets
-- Listing builds
-    While running the demo, I typically keep a terminal tab open with this command continually running.
-    ```sh
-    watch -n1 az acr build-task list-builds
-    ```
-
-- Running a build
-    ```sh
-    az acr build-task run -n demo42quotesapi
-    ```
-## Developing Locally
-- Get your db connection string 
-
-    ```sh
-    export CONNECTIONSTRING=$(az keyvault secret show \
-                                --vault-name $AKV_NAME \
-                                --name demo42-quotes-sql-connectionstring-eastus \
-                                --query value -o tsv)
-    ```
-- Local builds
-    ```sh
-    docker-compose build \
-    --build-arg REGISTRY_NAME=$REGISTRY_NAME
-    docker-compose up
-    open http://localhost
-    ```
-
 - Cleanup null images
     ```sh
     docker rmi $(docker images --quiet --filter "dangling=true")
     ```
-
 - Get AKS Credentials
     ```sh
     # EastUS
@@ -74,6 +42,48 @@
     # West Europe
     az aks browse -g acrdemoaksweu -n acrdemoweu
     ```
+
+## ACR Snippets
+- Listing builds
+    While running the demo, I typically keep a terminal tab open with this command continually running.
+    ```sh
+    watch -n1 az acr build-task list-builds
+    ```
+
+- Running a build
+    ```sh
+    az acr build-task run -n demo42quotesapi
+    ```
+- Local Docker build
+    ```sh
+    docker build -t web:uniqueid12345 -f src/WebUI/Dockerfile .
+    ```
+
+- ACR Build
+    ```sh
+    az acr build -t web:{{.Build.ID} -f src/WebUI/Dockerfile .
+    ```
+
+- Build-Task Create
+    ```sh
+    az acr build-task create \
+    -n demo42web \
+    --cpu 2 \
+    -t demo42/web:{{.Build.ID}} \
+    -t demo42/web:latest \
+    -f ./src/WebUI/Dockerfile \
+    --build-arg REGISTRY_NAME=$REGISTRY_NAME \
+    --secret-build-arg=secureThing=dontLook \
+    --context https://github.com/demo42/web \
+    --branch completedish \
+    --git-access-token $(az keyvault secret show \
+                            --vault-name $AKV_NAME \
+                            --name $GIT_TOKEN_NAME \
+                            --query value -o tsv) 
+      ```
+
+# Container Unit Testing
+-  
 
 # Demo: Unique Tagging 
 1. Start with a stable deployment
