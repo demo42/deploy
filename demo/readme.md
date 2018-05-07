@@ -92,7 +92,7 @@
 
     Open web/test/demo42tests/indextests.cs
     ```sh
-    az acr build -t test -f src/WebUI/Dockerfile --no-push true .
+    az acr build -f src/WebUI/Dockerfile --no-push true .
     ```
 # Base Image Updates - AKS OS & Framework Patching
 
