@@ -83,7 +83,12 @@
       ```
 
 # Container Unit Testing
--  
+-  Review Unit Tests
+
+    Open web/test/demo42tests/indextests.cs
+    ```sh
+    az acr build -t test -f src/WebUI/Dockerfile --no-push true .
+    ```
 
 # Demo: Unique Tagging 
 1. Start with a stable deployment
