@@ -77,31 +77,30 @@
 
 # Demo: Unique Tagging 
 1. Start with a stable deployment
-1. Bump replicas of the website to 4
-    - open `deploy/templates/webapp.yaml`
-        ```yaml
-        spec: 
-        replicas: 4
-        ```
-1. Update `web\src\webui\pages\About.cshtml` with the following snippet to change the color
+1. Scale replicas of the website to 2
+1. Get the current tag
+    - Navigate to pods: http://127.0.0.1:8001/#!/pod?namespace=default
+    -   Click the name of a Web pod
+    - Copy tag 
+1. Push a "minor change" for a "fix" with the same tag
+1. Update the color in `web\src\webui\pages\About.cshtml`
     ```html
     @page
     @model AboutModel
     <style type="text/css">
         body {
             background-color: red;
-        }
-    </style>
     ```
-1. browse the kubernetes dashboard
-1. Navigate to pods: http://127.0.0.1:8001/#!/pod?namespace=default
-1. Click the name of a Web pod
-1. Copy the full image:tag as we'll replace that exact tag with a different version
-1. Re-tag the dev image you just made
+1. Build the image, using `acr build`
+    ```sh
+    az acr build \
+        -f src/WebUI/Dockerfile \
+         -t demo42/web:TAG .
+    ```
 
-    - `docker tag $REGISTRY_NAME/demo42/web:dev1` [pasted value]
-    - `docker push `[pasted value]
-1. Back in the Kubernetes portal, kill one of the running pods
+1. Kill a pod, to force a re-instance
+1. Navigate to pods: http://127.0.0.1:8001/#!/pod?namespace=default
+1. Kill one of the **web**  pods
 
 # Base Image Updates - AKS OS & Framework Patching
 
