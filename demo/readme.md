@@ -70,7 +70,6 @@
     -n demo42web \
     --cpu 2 \
     -t demo42/web:{{.Build.ID}} \
-    -t demo42/web:latest \
     -f ./src/WebUI/Dockerfile \
     --build-arg REGISTRY_NAME=$REGISTRY_NAME \
     --secret-build-arg=secureThing=dontLook \
@@ -89,6 +88,16 @@
     ```sh
     az acr build -t test -f src/WebUI/Dockerfile --no-push true .
     ```
+# Base Image Updates - AKS OS & Framework Patching
+
+1.  View the About page
+    -   Notice the background color
+1.  Update the base image
+    - Github - update aspnetcore-runtime 
+    - Open the dockerfile
+    - Change 
+    - Watch the build-tasks `watch -n1 az acr build-task list-builds`
+
 
 # Demo: Unique Tagging 
 1. Start with a stable deployment
@@ -117,13 +126,6 @@
 1. Navigate to pods: http://127.0.0.1:8001/#!/pod?namespace=default
 1. Kill one of the **web**  pods
 
-# Base Image Updates - AKS OS & Framework Patching
-
-1.  View the About page
-    -   Notice the Base **Image Version** and the **Image Built Date**
-1.  Rebuild the base image
-    - Run the script `web/src/baseImage/updateBaseImages.sh`
-    - Watch the build-tasks `watch -n1 az acr build-task list-builds`
 # Alternative Demos
 
 ## Using CLI to get POD info
