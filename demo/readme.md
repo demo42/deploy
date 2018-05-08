@@ -49,20 +49,17 @@
     az aks browse -g acrdemoaksweu -n acrdemoweu
     ```
 
-## ACR Snippets
-- Listing builds
-    While running the demo, I typically keep a terminal tab open with this command continually running.
-    ```sh
-    watch -n1 az acr build-task list-builds
-    ```
+# Demo Snippets
 
-- Running a build
+## Docker build
+    - local build
     ```sh
-    az acr build-task run -n demo42quotesapi
+    docker build -t web:uniqueid12345 -f ./src/WebUI/Dockerfile .
     ```
-- Local Docker build
+    - local run
     ```sh
-    docker build -t web:uniqueid12345 -f src/WebUI/Dockerfile .
+    open http://localhost:8001; \
+    docker run -it --rm -p 8001:80 web:uniqueid12345    
     ```
 
 - ACR Build
@@ -87,6 +84,16 @@
                             --query value -o tsv) 
       ```
 
+- Listing builds
+    While running the demo, I typically keep a terminal tab open with this command continually running.
+    ```sh
+    watch -n1 az acr build-task list-builds
+    ```
+
+- Running a build
+    ```sh
+    az acr build-task run -n demo42quotesapi
+    ```
 # Container Unit Testing
 -  Review Unit Tests
 
