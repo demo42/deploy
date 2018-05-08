@@ -50,22 +50,42 @@
     ```
 
 # Demo Snippets
+- Listing builds
+    While running the demo, I typically keep a terminal tab open with this command continually running.
+    ```sh
+    watch -n1 az acr build-task list-builds
+    ```
 
-## Docker build
-    - local build
+## Demo: Docker build
+
+- local build
+
+
     ```sh
     docker build -t web:uniqueid12345 -f ./src/WebUI/Dockerfile .
     ```
-    - local run
+- local run
+
     ```sh
     open http://localhost:8001; \
     docker run -it --rm -p 8001:80 web:uniqueid12345    
     ```
 
-- ACR Build
+## Demo: ACR Build
+- Inner-loop build
     ```sh
     az acr build -t web:{{.Build.ID} -f src/WebUI/Dockerfile .
     ```
+    ctrl + c
+- list the active builds
+    ```sh
+    watch -n1 az acr build-task list-builds
+    ```
+- reconnect to the log
+    ```sh
+    az acr build-task logs
+    ```
+    review the dependencies
 
 - Build-Task Create
     ```sh
@@ -82,45 +102,49 @@
                             --vault-name $AKV_NAME \
                             --name $GIT_TOKEN_NAME \
                             --query value -o tsv) 
-      ```
+    ```
+
+- commit a change, trigger a build
+    
+    change `web\pages\about.cshtml`
+- `git commit/push`
 
 - Listing builds
-    While running the demo, I typically keep a terminal tab open with this command continually running.
     ```sh
     watch -n1 az acr build-task list-builds
     ```
 
-- Running a build
-    ```sh
-    az acr build-task run -n demo42quotesapi
-    ```
-# Container Unit Testing
+## Demo: Container Unit Testing
 -  Review Unit Tests
 
-    Open web/test/demo42tests/indextests.cs
+    - Open `web/test/demo42tests/indexTests.cs`
+    - Open  `web/test/demo42tests/baseImageTests.cs`
+    - Open `web/src/WebUI/Dockerfile`
+    - `web/src/WebUI/Dockerfile` Enable tests
+
     ```sh
     az acr build -f src/WebUI/Dockerfile --no-push true .
     ```
-# Base Image Updates - AKS OS & Framework Patching
+## Demo: Base Image Updates - AKS OS & Framework Patching
 
 1.  View the About page
     -   Notice the background color
 1.  Update the base image
     - Github - update aspnetcore-runtime 
     - Open the dockerfile
-    - Change 
+    - Change the color
     - Watch the build-tasks `watch -n1 az acr build-task list-builds`
 
 
-# Demo: Unique Tagging 
-1. Start with a stable deployment
-1. Scale replicas of the website to 2
-1. Get the current tag
+## Demo: Unique Tagging 
+- Start with a stable deployment
+- Scale replicas of the website to 2
+- Get the current tag
     - Navigate to pods: http://127.0.0.1:8001/#!/pod?namespace=default
     -   Click the name of a Web pod
     - Copy tag 
-1. Push a "minor change" for a "fix" with the same tag
-1. Update the color in `web\src\webui\pages\About.cshtml`
+- Push a "minor change" for a "fix" with the same tag
+- Update the color in `web\src\webui\pages\About.cshtml`
     ```html
     @page
     @model AboutModel
@@ -128,16 +152,16 @@
         body {
             background-color: red;
     ```
-1. Build the image, using `acr build`
+- Build the image, using `acr build`
     ```sh
     az acr build \
         -f src/WebUI/Dockerfile \
          -t demo42/web:TAG .
     ```
 
-1. Kill a pod, to force a re-instance
-1. Navigate to pods: http://127.0.0.1:8001/#!/pod?namespace=default
-1. Kill one of the **web**  pods
+- Kill a pod, to force a re-instance
+- Navigate to pods: http://127.0.0.1:8001/#!/pod?namespace=default
+- Kill one of the **web**  pods
 
 # Alternative Demos
 
