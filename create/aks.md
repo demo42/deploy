@@ -1,12 +1,10 @@
 # Creating the AKS Instance
 
-## East US
+Rather than track bash and powershell commands for Mac and Windows clients, the bash [Azure Cloud Shell](https://shell.azure.com) can be used.
+
+Get the environment variables from [./envVars.md](./envVars.md)
+
 ```sh
-az group create -n acrdemoaks -l eastus
-az aks create -n acrdemoeus -g acrdemoaks -s Standard_D2_v2 -p acrdemo -k 1.9.6 
-```
-## West Europe
-```sh
-az group create -n acrdemoaksweu -l westeurope
-az aks create -n acrdemoweu -g acrdemoaksweu -s Standard_D2_v2 -p acrdemo -k 1.9.6 
+az group create -n $RESOURCE_GROUP -l $LOCATION
+az aks create -n $RESOURCE_GROUP -g $RESOURCE_GROUP -s Standard_D2_v2 -p acrdemo -k 1.9.6 
 ```
