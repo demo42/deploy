@@ -7,7 +7,7 @@ Builds the web front end of the app
 ```sh
 # Replace these values for your configuration
 # I've left our values in, as we use this for our demos, providing some examples
-export ACR_NAME=jengademos
+export ACR_NAME=demo42
 export RESOURCE_GROUP=$ACR_NAME
 # fully qualified url of the registry. 
 # This is where your registry would be
