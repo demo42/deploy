@@ -3,14 +3,14 @@ replicaCount: 1
 
 web:
   image: demo42/web:vn
-  replicas: 4
+  replicas: 2
 quotes-api:
   image: demo42/quotes-api:vn
   replicas: 2
 
 queueworker:
   image: demo42/queueworker:vn
-  replicas: 2
+  replicas: 1
 quotes-api-db-connectionstring: myconnectionNotStringed
 
 imageCredentials:

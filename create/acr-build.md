@@ -142,6 +142,6 @@ az acr webhook create \
                             --vault-name $AKV_NAME \
                             --name demo42-webhook-auth-header \
                             --query value -o tsv) \
-  --uri http://http://jengajenkins.eastus.cloudapp.azure.com//jenkins/generic-webhook-trigger/invoke
+  --uri http://40.121.67.160:8080/jenkins/generic-webhook-trigger/invoke
 ```
 

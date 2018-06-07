@@ -16,11 +16,11 @@ export AKV_NAME=$DEMO_NAME
 export SQL_USER=demo42user
 export SQL_PASSWORD=[pwd]
 
-export ACR_NAME=$ACR_NAME
+export ACR_NAME=$DEMO_NAME
 # fully qualified url of the registry. 
 export REGISTRY_NAME=${ACR_NAME}.azurecr.io/ 
 
-export GIT_TOKEN_NAME=[user]-git-access-token # keyvault secret name
+export GIT_TOKEN_NAME=stevelasker-git-access-token # keyvault secret name
 export PAT=#[git token]
 
 
