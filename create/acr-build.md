@@ -16,21 +16,7 @@ export REGISTRY_NAME=${ACR_NAME}.azurecr.io/
 export AKV_NAME=$ACR_NAME-vault # name of the keyvault
 export GIT_TOKEN_NAME=stevelasker-git-access-token # keyvault secret name
 ```
-```sh
-az acr build-task create \
-  -n basedotnetsdk \
-  --context https://github.com/demo42/deploy \
-  -t baseimages/microsoft/dotnet-sdk:linux-2.1 \
-  --cpu 2 \
-  -f ./baseImage/sdk/Dockerfile \
-  --build-arg REGISTRY_NAME=$REGISTRY_NAME \
-  --git-access-token $(az keyvault secret show \
-                         --vault-name $AKV_NAME \
-                         --name $GIT_TOKEN_NAME \
-                         --query value -o tsv) \
-  --registry $ACR_NAME 
-  ```
-
+## Web
 
 ```sh
 BRANCH=master
