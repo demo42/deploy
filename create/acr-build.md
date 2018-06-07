@@ -54,7 +54,7 @@ Builds the back-end Quotes API
 ```sh
 BRANCH=master
 az acr build-task create \
-  -n demo42queueworker \
+  -n demo42quotesapi \
   --context https://github.com/demo42/quotes \
   -t demo42/quotes-api:{{.Build.ID}} \
   -f ./src/QuoteService/Dockerfile \
