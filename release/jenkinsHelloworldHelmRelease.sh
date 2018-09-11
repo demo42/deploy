@@ -12,7 +12,7 @@ case $REPOSITORY in
   demo42/helloworld*)
     echo helm upgrade demo42 ./helm/ --reuse-values --set web.image=$REGISTRY/$REPOSITORY:$TAG 
     
-    helm upgrade helloworld ./reelase/helm/ \
+    helm upgrade helloworld ./relase/helm/ \
       --reuse-values \
       --set helloworld.image=$REGISTRY/$REPOSITORY:$TAG 
   ;;
@@ -25,3 +25,10 @@ esac
 
 helm upgrade helloworld ./release/helm/ \
 --reuse-values \
+
+
+helm upgrade helloworld ./helm/importantThings \
+  --reuse-values \
+  --set helloworld.image=demo42.azurecr.io/demo42/web:aamv
+  
+  $REGISTRY/$REPOSITORY:$TAG 
