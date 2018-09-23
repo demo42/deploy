@@ -24,7 +24,7 @@ steps:
       cmd.azurecr-test.io/helm:v2.11.0.2
       acr helm repo push ./importantThings-1.0.0.tgz 
       --force
-    entryPoint: ["az"]
+    entryPoint: "az"
     env:
       - TENANT={{.Values.TENANT}}
       - SP={{.Values.SP}}
