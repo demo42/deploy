@@ -21,8 +21,10 @@ steps:
       - CLUSTER_RESOURCE_GROUP={{.Values.CLUSTER_RESOURCE_GROUP}}
       - CLUSTER_NAME={{.Values.CLUSTER_NAME}}
   - cmd: >
-      cmd.azurecr-test.io/az-cli 
-      acr helm repo push ./importantThings-1.0.0.tgz
+      cmd.azurecr-test.io/helm:v2.11.0.2
+      acr helm repo push ./importantThings-1.0.0.tgz 
+      --force
+    entryPoint: ["az"]
     env:
       - TENANT={{.Values.TENANT}}
       - SP={{.Values.SP}}
