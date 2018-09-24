@@ -1,33 +1,10 @@
 version: 1.0-preview-1
 steps:
   - cmd: >
-      cmd.azurecr-test.io/az-cli acr helm repo add 
-      -n demo42
+      cmd.azurecr-test.io/helm:v2.11.0-rc.2 
+    entryPoint: "./deploy.sh"
     env:
       - TENANT={{.Values.TENANT}}
       - SP={{.Values.SP}}
       - PASSWORD={{.Values.PASSWORD}}
-      - CLUSTER_RESOURCE_GROUP={{.Values.CLUSTER_RESOURCE_GROUP}}
-      - CLUSTER_NAME={{.Values.CLUSTER_NAME}}
-  - cmd: >
-      cmd.azurecr-test.io/helm:v2.11.0-rc.2 package 
-      --version 1.0.0 
-      --app-version {{.Run.ID}} 
-      ./helm/importantThings
-    env:
-      - TENANT={{.Values.TENANT}}
-      - SP={{.Values.SP}}
-      - PASSWORD={{.Values.PASSWORD}}
-      - CLUSTER_RESOURCE_GROUP={{.Values.CLUSTER_RESOURCE_GROUP}}
-      - CLUSTER_NAME={{.Values.CLUSTER_NAME}}
-  - cmd: >
-      cmd.azurecr-test.io/helm:v2.11.0.2
-      acr helm repo push ./importantThings-1.0.0.tgz 
-      --force
-    entryPoint: "az"
-    env:
-      - TENANT={{.Values.TENANT}}
-      - SP={{.Values.SP}}
-      - PASSWORD={{.Values.PASSWORD}}
-      - CLUSTER_RESOURCE_GROUP={{.Values.CLUSTER_RESOURCE_GROUP}}
-      - CLUSTER_NAME={{.Values.CLUSTER_NAME}}
+      - REGISTRY_NAME=demo42
