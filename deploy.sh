@@ -18,7 +18,7 @@ az acr helm repo add
 
 echo -- helm package --
 helm package \
-    --version 1.0.0 \
+    --version $APP_VERSION \
     --app-version {{.Run.ID}} \
     ./helm/importantThings
 

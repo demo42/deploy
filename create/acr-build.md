@@ -21,7 +21,7 @@ export GIT_TOKEN_NAME=stevelasker-git-access-token # keyvault secret name
 ** preview api **
 ```sh
 BRANCH=master
-az acr build-task create \
+az acr task create \
   -n demo42web \
   --context https://github.com/demo42/web \
   -t demo42/web:{{.Build.ID}} \
