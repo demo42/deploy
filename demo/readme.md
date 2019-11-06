@@ -1,15 +1,18 @@
 # A list of saved commands I use during demos
 
 ## Links
+
 - http://jengajenkins.eastus.cloudapp.azure.com
 - http://demo42-helloworld.eastus.cloudapp.azure.com/
 - http://demo42.eastus.cloudapp.azure.com/
 - http://demo42.westeurope.cloudapp.azure.com/
 
 ## Presets
+
 - A set of env vars used for each demo
     
     Common Environment Variables
+
     ```sh
     # Replace these values for your configuration
     # I've left our values in, as we use this for our demos, providing some examples
@@ -24,20 +27,26 @@
     ```
 
 - Setting the default registry, so each az acr command doesn't need to include `-r`
+
     ```sh
     az configure --defaults acr=$ACR_NAME
     ```
+
 - Cleanup null images
+
     ```sh
     docker rmi $(docker images --quiet --filter "dangling=true")
     ```
+
 - Get AKS Credentials
+
     ```sh
     # EastUS
     az aks get-credentials -g acrdemoaks -n acrdemoeus
     # West Europe
     az aks get-credentials -g acrdemoaksweu -n acrdemoweu
     ```
+
 - Browsing the AKS Cluster - Kube Dashboard
 
   I typically leave this in it's own tab
@@ -50,8 +59,10 @@
     ```
 
 # Demo Snippets
+
 - Listing builds
     While running the demo, I typically keep a terminal tab open with this command continually running.
+
     ```sh
     watch -n1 az acr build-task list-builds
     ```
@@ -60,34 +71,42 @@
 
 - local build
 
-
     ```sh
     docker build -t web:uniqueid12345 -f ./src/WebUI/Dockerfile .
     ```
+
 - local run
 
     ```sh
     open http://localhost:8001; \
-    docker run -it --rm -p 8001:80 web:uniqueid12345    
+    docker run -it --rm -p 8001:80 web:uniqueid12345
     ```
 
 ## Demo: ACR Build
+
 - Inner-loop build
+
     ```sh
     az acr build -t web:{{.Build.ID} -f src/WebUI/Dockerfile .
-    ```
     ctrl + c
+    ```
+
 - list the active builds
+
     ```sh
     watch -n1 az acr build-task list-builds
     ```
+
 - reconnect to the log
+
     ```sh
     az acr build-task logs
     ```
+
     review the dependencies
 
 - Build-Task Create
+
     ```sh
     az acr build-task create \
     -n demo42web \
@@ -104,17 +123,19 @@
                             --query value -o tsv) 
     ```
 
-- commit a change, trigger a build
-    
-    change `web\pages\about.cshtml`
+- commit a change, trigger a build  
+  change `web\pages\about.cshtml`
+
 - `git commit/push`
 
 - Listing builds
+
     ```sh
     watch -n1 az acr build-task list-builds
     ```
 
 ## Demo: Container Unit Testing
+
 -  Review Unit Tests
 
     - Open `web/test/demo42tests/indexTests.cs`
@@ -125,12 +146,13 @@
     ```sh
     az acr build -f src/WebUI/Dockerfile --no-push true .
     ```
+
 ## Demo: Base Image Updates - AKS OS & Framework Patching
 
 1.  View the About page
     -   Notice the background color
 1.  Update the base image
-    - Github - update aspnetcore-runtime 
+    - Github - update aspnetcore-runtime
     - Open the dockerfile
     - Change the color
     - Watch the build-tasks `watch -n1 az acr build-task list-builds`
@@ -142,9 +164,10 @@
 - Get the current tag
     - Navigate to pods: http://127.0.0.1:8001/#!/pod?namespace=default
     -   Click the name of a Web pod
-    - Copy tag 
+    - Copy tag
 - Push a "minor change" for a "fix" with the same tag
 - Update the color in `web\src\webui\pages\About.cshtml`
+
     ```html
     @page
     @model AboutModel

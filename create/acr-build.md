@@ -1,133 +1,71 @@
-# Resources to create/configure ACR Build
-Info on [ACR Build](https://aka.ms/acr/build)
+# Resources to create/configure ACR Tasks
+
+Info on [ACR Tasks](https://aka.ms/acr/build)
 
 ## Web Build-Task
+
 Builds the web front end of the app
- Common Environment Variables
-```sh
-# Replace these values for your configuration
-# I've left our values in, as we use this for our demos, providing some examples
-export ACR_NAME=demo42
-export RESOURCE_GROUP=$ACR_NAME
-# fully qualified url of the registry. 
-# This is where your registry would be
-# Accounts for registries in dogfood or other clouds like .gov, Germany and China
-export REGISTRY_NAME=${ACR_NAME}.azurecr.io/ 
-export AKV_NAME=$ACR_NAME-vault # name of the keyvault
-export GIT_TOKEN_NAME=stevelasker-git-access-token # keyvault secret name
-```
+
 ## Web
 
-** preview api **
 ```sh
-BRANCH=master
 az acr task create \
-  -n demo42web \
-  --context https://github.com/demo42/web \
-  -t demo42/web:{{.Build.ID}} \
-  --branch $BRANCH \
-  -f ./src/WebUI/Dockerfile \
-  --build-arg REGISTRY_NAME=$REGISTRY_NAME \
+  --registry  $ACR_NAME \
+  --name      demo42-web \
+  --image     demo42/web:{{.Build.ID}} \
+  --file      acr-task.yaml \
+  --arg       REGISTRY_NAME=$REGISTRY_NAME \
+  --context   $GIT_REPO_WEB \
   --git-access-token $(az keyvault secret show \
                          --vault-name $AKV_NAME \
                          --name $GIT_TOKEN_NAME \
                          --query value -o tsv) \
-  --registry $ACR_NAME 
-```
-
-** GA Api dockerfile
-```sh
-BRANCH=master
-az acr task create \
-  -n demo42-web \
-  --context https://github.com/demo42/web \
-  -t demo42/web:{{.Build.ID}} \
-  --branch $BRANCH \
-  -f ./src/WebUI/Dockerfile \
-  --build-arg REGISTRY_NAME=$REGISTRY_NAME \
-  --git-access-token $(az keyvault secret show \
+  --set-secret TENANT=$(az keyvault secret show \
                          --vault-name $AKV_NAME \
-                         --name $GIT_TOKEN_NAME \
+                         --name $ACR_NAME-tenant \
                          --query value -o tsv) \
-  --registry $ACR_NAME 
-```
-
-** Task Preview 
-```sh
-BRANCH=master
-az acr task create \
-  -n demo42-web \
-  --file acr-task.yaml \
-  --context https://github.com/demo42/web \
-  --branch $BRANCH \
-  --set-secret TENANT=72f988bf-86f1-41af-91ab-2d7cd011db47 \
-  --set-secret SP=0b161bb5-d504-479b-b11b-a4d5eddfbb22 \
-  --set-secret PASSWORD=0968c6cc-59ae-4938-908e-9dd317683a2e \
-  --set CLUSTER_NAME=demo42-staging-eus \
-  --set CLUSTER_RESOURCE_GROUP=demo42-staging-eus \
-  --build-arg REGISTRY_NAME=$REGISTRY_NAME \
-  --git-access-token $(az keyvault secret show \
+  --set-secret SP=$(az keyvault secret show \
                          --vault-name $AKV_NAME \
-                         --name $GIT_TOKEN_NAME \
+                         --name $ACR_NAME-deploy-usr \
                          --query value -o tsv) \
-  --registry $ACR_NAME 
-```
-```sh
-az acr task create \
-  -n demo42-web \
-  --file acr-task.yaml \
-  --context https://github.com/demo42/web.git \
-  --branch $BRANCH \
-  --set-secret TENANT=$TENANT \
-  --set-secret SP=$SP \
-  --set-secret PASSWORD=$PASSWORD \
-  --set CLUSTER_NAME=demo42-staging-eus \
-  --set CLUSTER_RESOURCE_GROUP=demo42-staging-eus \
-  --set-secret REGISTRY_USR=$ACR_PULL_USR \
-  --set-secret REGISTRY_PWD=$ACR_PULL_PWD \
-  --git-access-token ${GIT_TOKEN} \
-  --registry $ACR_NAME 
-```
-
-```sh
-kubectl create secret docker-registry acr-auth --docker-server demo42.azurecr-test.io --docker-username $ACR_DF_PULL_USR --docker-password $ACR_DF_PULL_PWD --docker-email not-needed@foo-bar.com
+  --set-secret PASSWORD=$(az keyvault secret show \
+                         --vault-name $AKV_NAME \
+                         --name $ACR_NAME-deploy-pwd \
+                         --query value -o tsv) \
+  --set CLUSTER_NAME=${DEMO_NAME}-${ENV_NAME} \
+  --set CLUSTER_RESOURCE_GROUP=$RESOURCE_GROUP_ENV
 ```
 
 ## Quotes API 
-Builds the back-end Quotes API
-** Preview API **
-```sh
-BRANCH=master
-az acr build-task create \
-  -n demo42quotesapi \
-  --context https://github.com/demo42/quotes \
-  -t demo42/quotes-api:{{.Build.ID}} \
-  -f ./src/QuoteService/Dockerfile \
-  --cpu 2 \
-  --branch $BRANCH \
-  --build-arg REGISTRY_NAME=$REGISTRY_NAME \
-  --git-access-token $(az keyvault secret show \
-                         --vault-name $AKV_NAME \
-                         --name $GIT_TOKEN_NAME \
-                         --query value -o tsv) \
-  --registry $ACR_NAME 
-```
 
-** GA API
+Builds the back-end Quotes API
+
 ```sh
-BRANCH=master
 az acr task create \
-  -n demo42-quotes-api \
-  --context https://github.com/demo42/quotes \
-  -t demo42/quotes-api:{{.Build.ID}} \
-  -f ./src/QuoteService/Dockerfile \
-  --branch $BRANCH \
-  --build-arg REGISTRY_NAME=$REGISTRY_NAME \
+  --registry $ACR_NAME \
+  --name demo42-quotes-api \
+  --image demo42/quotes-api:{{.Build.ID}} \
+  --context $GIT_REPO_QUOTES \
+  --file      acr-task.yaml \
+  --arg       REGISTRY_NAME=$REGISTRY_NAME \
   --git-access-token $(az keyvault secret show \
                          --vault-name $AKV_NAME \
                          --name $GIT_TOKEN_NAME \
                          --query value -o tsv) \
-  --registry $ACR_NAME 
+  --set-secret TENANT=$(az keyvault secret show \
+                         --vault-name $AKV_NAME \
+                         --name $ACR_NAME-tenant \
+                         --query value -o tsv) \
+  --set-secret SP=$(az keyvault secret show \
+                         --vault-name $AKV_NAME \
+                         --name $ACR_NAME-deploy-usr \
+                         --query value -o tsv) \
+  --set-secret PASSWORD=$(az keyvault secret show \
+                         --vault-name $AKV_NAME \
+                         --name $ACR_NAME-deploy-pwd \
+                         --query value -o tsv) \
+  --set CLUSTER_NAME=${DEMO_NAME}-${ENV_NAME} \
+  --set CLUSTER_RESOURCE_GROUP=$RESOURCE_GROUP_ENV
 ```
 
 ## QueueWorker
@@ -238,3 +176,8 @@ az acr webhook create \
   --uri http://40.121.67.160:8080/jenkins/generic-webhook-trigger/invoke
 ```
 
+## Notes
+
+```sh
+kubectl create secret docker-registry acr-auth --docker-server demo42.azurecr-test.io --docker-username $ACR_DF_PULL_USR --docker-password $ACR_DF_PULL_PWD --docker-email not-needed@foo-bar.com
+```

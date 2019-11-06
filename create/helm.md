@@ -3,20 +3,33 @@
 Used when I manually run helm charts for testing. A version of this is configured through jenkins
 
 ## Environment Variables
-    see [envVars](./envVars.md)
+
+see [envVars](./envVars.md)
+
+## Setting Up the AKS Connection
+
+```sh
+az aks get-credentials -n $AKS_NAME -g $RESOURCE_GROUP_ENV
+```
+
+## Helm Initialization
+
+```sh
+helm init --history-max 200
+```
 
 ## Install
 
 On first install, replace the top line of upgrade, with this install line:
 ```sh
 
-helm install ./helm/ -n demo42-$ENV_NAME \
+helm install ./helm/importantThings -n $DEMO_NAME \
 ```
 ## Upgrade
 ```sh
-helm upgrade demo42-$ENV_NAME ./helm/ \
+helm upgrade $DEMO_NAME ./helm/importantThings \
 --reuse-values \
-helm install ./helm/ -n demo42 \
+helm install ./helm/importantThings -n $DEMO_NAME \
 --set web.host=$HOST \
 --set web.image=${REGISTRY_NAME}demo42/web:aag \
 --set quotesApi.image=${REGISTRY_NAME}demo42/quotes-api:aae \
